@@ -1,0 +1,99 @@
+{
+    "events": [
+        {
+            "tickCount" : 3,
+            "type" : "log",
+            "event" : {
+                "id": 55,
+                "date": "2017-04-21T09:31:04.000Z",
+                "gameId": 40,
+                "squadName": "simulatedSquad",
+                "type": "Hax",
+                "text": "Well done squad simulatedSquad! You damaged the deathstar!"
+            }
+        },
+        {
+            "tickCount" : 5,
+            "type" : "score",
+            "event" : {
+                "squad": "dashboard",
+                "score": 100
+            }
+        },
+        {
+            "tickCount" : 15,
+            "type" : "score",
+            "event" : {
+                "squad": "ds-backend",
+                "score": 150
+            }
+        },
+        {
+            "tickCount" : 12,
+            "type" : "squad",
+            "event" : {
+                "squad": "dashboard",
+                "environment": "gse00010206",
+                "created": "2017-04-13T13:19:29.589+0000",
+                "modified": "2017-04-14T15:39:42.397+0000",
+                "fighters": 1,
+                "status": "RUNNING",
+                "weapon": "java"
+            }
+        },
+        {
+            "tickCount" : 14,
+            "type" : "deathstar",
+            "event" : {
+                    "id": 40,
+                    "startTime": "2017-04-13T16:46:24.000Z",
+                    "timeLimit": 30,
+                    "endTime": "2017-04-13T17:16:24.000Z",
+                    "numberOfSquads": 4,
+                    "startHealth": 1000,
+                    "currentHealth": 950,
+                    "gseDomains": "[{\"auth\": \"Basic Y2xvdWQuYWRtaW46Y2VudGVSQDNXSW5k\", \"name\": \"gse00010206\", \"region\": \"europe\"}]",
+                    "state": "STARTED"
+            }
+        },
+        {
+            "tickCount" : 8,
+            "type" : "log",
+            "event" : {
+                "id": 56,
+                "date": "2017-04-21T09:31:04.000Z",
+                "gameId": 40,
+                "squadName": "linustest",
+                "type": "Hax",
+                "text": "Well done squad linustest! You damaged the deathstar!"
+            }
+        },
+        {
+            "tickCount" : 16,
+            "type" : "log",
+            "event" : {
+                "id": 57,
+                "date": "2017-04-21T09:31:04.000Z",
+                "gameId": 40,
+                "squadName": "dashboard",
+                "type": "Hax",
+                "text": "Well done squad dashboard! You damaged the deathstar!"
+            }
+        },
+        {
+            "tickCount" : 18,
+            "type" : "deathstar",
+            "event" : {
+                    "id": 40,
+                    "startTime": "2017-04-13T16:46:24.000Z",
+                    "timeLimit": 30,
+                    "endTime": "2017-04-13T17:16:24.000Z",
+                    "numberOfSquads": 4,
+                    "startHealth": 1000,
+                    "currentHealth": 650,
+                    "gseDomains": "[{\"auth\": \"Basic Y2xvdWQuYWRtaW46Y2VudGVSQDNXSW5k\", \"name\": \"gse00010206\", \"region\": \"europe\"}]",
+                    "state": "STARTED"
+            }
+        }
+    ]
+}

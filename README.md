@@ -1,2 +1,2 @@
-ds-dashboard.git
+dashboard.git
 

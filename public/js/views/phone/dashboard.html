@@ -1,0 +1,65 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<div class="justifyCenter justifyCenterMasonryLayout">
+    <div id="templateList" data-bind="template: 'dashboardContent'"></div>
+</div>
+
+<script type="text/html" id="dashboardContent">
+
+    <div class="oj-flex oj-flex-items-pad">
+        <div id="highscore-board" class="oj-lg-4 oj-md-6 oj-sm-12 oj-flex-item">
+            <h1>Highscores</h1>
+            <div data-bind="foreach: {data: highscores, as: 'highscore'}">
+                <h3 data-bind="text: highscore.squad() + ' - ' + highscore.score()"></h3>
+            </div>
+        </div>
+        <div id="deathstar" class="oj-lg-3 oj-md-6 oj-sm-12 oj-flex-item">
+            <h1>Death Star status</h1>
+            <h3 data-bind="text: 'id: ' + deathstar.id()"></h3>
+            <h3 data-bind="text: 'Current Health: ' + deathstar.currentHealth()"></h3>
+        </div>
+    </div>
+    <div id="squads">
+        <h1>Squads</h1>
+        <div class="oj-flex oj-flex-items-pad" 
+            data-bind="foreach: {data : squads, as: 'sq'}">
+               <div class="oj-lg-3 oj-sm-12 oj-flex-item">
+                   <div class="squad">
+                        <h3 data-bind="text: sq.squad()"></h3>
+                        <ul>
+                            <li>
+                                <strong>Weapon: </strong>
+                                <span data-bind="text: sq.weapon()"></span>
+                            </li>
+                            <li>
+                                <strong>Status: </strong>
+                                <span data-bind="text: sq.status()"></span>
+                            </li>
+                            <li>
+                                <strong>Airtime: </strong>
+                                <span data-bind="text: sq.airTime()"></span>
+                            </li>
+                            <li>
+                                <strong>Number of Fighters: </strong>
+                                <span data-bind="text: sq.fighters()"></span>
+                            </li>
+                        </ul>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+    
+    <div id="logs">
+        <h1>Latest Actions</h1>
+        <div data-bind="foreach: {data: logs, as: 'log' }">
+            <p class="log" 
+               data-bind="text: '[' + log.formattedDate() + '] : ' + log.squadName() + 
+               ' - ' + log.text()"></p>
+        </div>
+    </div>
+    
+    
+</script>

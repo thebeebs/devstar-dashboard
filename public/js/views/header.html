@@ -1,0 +1,29 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+ -->
+<!--
+   JET V1.1 appheader template
+   - Contains three main areas: appname/logo, global navigation, and application navigation.
+-->
+<div id="ojAppNav"
+  class="oj-web-applayout-navbar oj-sm-only-hide oj-web-applayout-max-width oj-navigationlist-item-dividers oj-md-condense oj-md-justify-content-center oj-lg-justify-content-flex-start"
+  data-bind="ojComponent: {component: 'ojNavigationList',
+    drillMode: 'none',
+    edge: 'top', navigationLevel: 'application',
+    selection: $root.router.stateId(),
+    data: dataSource,
+    optionChange: $root.optionChangeHandler,
+    item: { template: 'app_nav_template'}
+    }" aria-label="Choose only one navigation element">
+</div>
+
+<!-- template for rendering app nav data -->
+<script type="text/html" id="app_nav_template">
+  <li data-bind="css:{'oj-disabled' : $data['disabled'] == 'true'}">
+    <a href="#">
+      <span data-bind="css: $data['iconClass']"></span>
+      <!-- ko text: $data['name'] --> <!--/ko-->
+    </a>
+  </li>
+</script>

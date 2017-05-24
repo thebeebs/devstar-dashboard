@@ -1,0 +1,229 @@
+<!--
+ Copyright (c) 2014, 2017, Oracle and/or its affiliates.
+ The Universal Permissive License (UPL), Version 1.0
+-->
+<div class="justifyCenter justifyCenterMasonryLayout">
+    <div id="templateList" data-bind="template: 'dashboardContent'"></div>
+</div>
+<script type="text/html" id="dashboardContent">
+    
+    <div class="spy-message" data-bind="visible: spy.visible(),
+         style: {
+             left: spy.x(),
+             top: spy.y(),
+             width: spy.width(),
+             height: spy.height()
+         }">
+        <!--<p class="message" data-bind="text: spy.message()"></p>-->
+        <!--<blockquote class="oval-speech">
+            Test with blockquote
+        </blockquote>-->
+        
+        <div class="triangle-border right">
+            <div class="spy-message-nav">
+                <a data-bind="click: spy.previous, css: { enabled: spy.hasPrevious }">Previous</a>
+                <span data-bind="html: spy.messages()[spy.selectedMessage()].name"></span>
+                <a data-bind="click: spy.next, css: { enabled: spy.hasNext }">Next</a> 
+            </div>
+            <p data-bind="html: spy.messages()[spy.selectedMessage()].message"></p>
+        </div>
+    </div>
+    
+    <div id="spy-block" data-bind="click: spy.toggleVisibility">
+        <h3>Spy</h3>
+        <img id="spy" data-bind="attr: {src : '/css/images/spyGalenErso.png'},
+            style: {width: '100px'}"></img>
+    </div>
+    
+    <div class="dashboard-flex-layout" data-bind="visible: popupMessage.show() == false">
+        <div id="logs">
+            <h1>Latest Actions</h1>
+            <div id="log-messages" data-bind="foreach: {data: logs, as: 'log' }">
+                <!--<p class="log" 
+                   data-bind="text: log.message()"></p> iterate, database, finished-->
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'database'">
+                    Excellent <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has found and hit the reactor core and inflicted 
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'iterate'">
+                    Fantastic defense <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has shot down 10 TIE fighters and inflicted 
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'shield'">
+                    Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has fired at the shield and inflicted 
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'deploy'">
+                    Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has been deployed and inflicted 
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'scale'">
+                    Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has scaled up to two fighters and dealt 
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'hard'">
+                    Fueld Tank hacked! <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has hacked and destroyed the Fuel Tank, causing <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'falcon'">
+                    Energy level increased! <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
+                    <span class="log-ms" data-bind="text: log.microserviceName()"></span>
+                    has increased the memory of their fighter!
+                </p>
+                <p class="log" 
+                   data-bind="visible: log.type().toLowerCase() === 'start'">
+                    The game has started! Good luck to all Squads on bringing down the Death Star!
+                </p>
+            </div>
+        </div>
+        <div id="highscore-board">
+            <h1>Highscores</h1>
+            <div data-bind="foreach: {data: highscoreSquads, as: 'squad'}">
+                <div class="highscore-entry">
+                    <h3 class="highscore-team-entry"
+                        data-bind="text: ($index() + 1) + '. ' + squad.name()"></h3>
+                    <h3 class="highscore-score-entry"
+                        data-bind="text: squad.score()"></h3>
+                </div>
+            </div>
+        </div>
+        <div id="deathstar">
+            <h1>Death Star</h1>
+            <h3 data-bind="text: 'Current Health:'"></h3>
+            <div id="progressbar"
+                 data-bind="ojComponent: {
+                      component: 'ojProgressbar', 
+                      value: deathstar.currentHealth(),
+                      max: deathstar.startHealth()
+                }">
+            </div>
+            <h3 data-bind="text: 'Time left: ' + deathstar.timeLeft()"></h3>
+            <!--<h1>Spy</h1>
+            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'deploy'
+               || deathstar.stateLowerCase() === 'started'">
+                I have nothing to report, you have to get your fighters ready!</p>
+            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'shield'">
+                I have found the coordinates for the shield. It is positioned at (33, 45).</p>
+            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
+                I have found the coordinates for the shield. It is positioned at (33, 45).</p>
+            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
+                Someone has been sloppy with credentials!
+                I found out that they keep the map to the reactor in the following database: <br/>
+                Host: 140.86.34.87<br/>
+                Database name: deathstar<br/>
+                User: CaptainGodherdt<br/>
+                Password: ILoveDarth@2017<br/>
+                Table name: MissionDatabase</p>
+            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
+            Incoming! The Empire has sent out 10 TIE Fighters! 
+            I have been able to lock down the x-coordinate but you have to use your minigun to fire between y0 and y9 coordinates!</p>-->
+            <!--<h3>Spy</h3>
+            <img id="spy" data-bind="attr: {src : '/css/images/xwing.png'},
+                 style: {width: '72px'}, click: spy.toggleVisibility"></img>-->
+        </div>
+    </div>
+    <div id="squads" data-bind="visible: popupMessage.show() === false">
+        <h1>Squads</h1>
+        <div class="squad-columns" data-bind="foreach: { data: squads, as: 'squad' }">
+            <div class="col">
+                <h2 data-bind="text: squad.name(), style: { 'text-align' : 'center' , color: squad.name()}"></h2>
+                <div data-bind="foreach: { data: squad.microservices, as : 'ms' }">
+                    <div class="squad">
+                        <div data-bind="style: {
+                            display: 'flex',
+                            'justify-content' : 'space-around'
+                        }">
+                            <h3 data-bind="text: ms.name().toLowerCase()"></h3>
+                            <img data-bind="attr: { src: '/css/images/' + ms.statusIcon() + '.png' },
+                                style: {width: '36px', height: '36px'}"></img>
+                        </div>
+                        <ul>
+                            <li data-bind="style: {'display' : 'flex', 'align-items' : 'center'}">
+                                <strong>Weapon: </strong>
+                                <img data-bind="attr: { 
+                                    src : '/css/images/' + ms.platformimg() + '.png' 
+                                }, style : { 
+                                        width : '36px' ,
+                                        'margin-left' : '10px'
+                                }"></img>
+                            </li>
+                            <li data-bind="style: { display: 'flex', 'align-items': 'center'}">
+                                <strong>Fighters: </strong>
+                                <div data-bind="foreach: Array(ms.instances())">
+                                    <img data-bind="attr: {
+                                        src : '/css/images/xwing.png'
+                                    }, style : { 
+                                        width : '48px', 
+                                        'margin-left': '10px' 
+                                    }"></img>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div class="oj-flex oj-flex-items-pad" 
+             data-bind="foreach: {data : squads, as: 'sq'}">
+            <div class="oj-lg-3 oj-sm-12 oj-flex-item">
+                <div class="squad">
+                    <div data-bind="style: {
+                        display : 'flex',
+                        'justify-content' : 'space-around'
+                    }">
+                        <h3 data-bind="text: sq.name()"></h3>
+                        <img data-bind="attr: { src: '/css/images/' + sq.statusIcon() + '.png' },
+                             style: {width: '36px', height: '36px'}"></img>
+                    </div>
+                    <ul>
+                        <li data-bind="style: {'display' : 'flex', 'align-items' : 'center'}">
+                            <strong>Weapon: </strong>
+                            <img data-bind="attr: { 
+                                src : '/css/images/' + sq.weapon() + '.png' 
+                            }, style : { 
+                                    width : '36px' ,
+                                    'margin-left' : '10px'
+                            }"></img>
+                        </li>
+                        <li data-bind="style: { display: 'flex', 'align-items': 'center'}">
+                            <strong>Fighters: </strong>
+                            <div data-bind="foreach: Array(sq.fighters())">
+                                <img data-bind="attr: {
+                                    src : '/css/images/xwing.png'
+                                }, style : { 
+                                    width : '48px', 
+                                    'margin-left': '10px' 
+                                }"></img>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>-->
+    </div>
+</div>
+
+<div id="new-message" data-bind="visible: popupMessage.show()">
+    <h3 data-bind="html: popupMessage.message()"></h1>
+</div>
+
+
+</script>
