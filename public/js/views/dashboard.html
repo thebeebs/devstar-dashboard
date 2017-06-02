@@ -14,10 +14,6 @@
              width: spy.width(),
              height: spy.height()
          }">
-        <!--<p class="message" data-bind="text: spy.message()"></p>-->
-        <!--<blockquote class="oval-speech">
-            Test with blockquote
-        </blockquote>-->
         
         <div class="triangle-border right">
             <div class="spy-message-nav">
@@ -39,8 +35,6 @@
         <div id="logs">
             <h1>Latest Actions</h1>
             <div id="log-messages" data-bind="foreach: {data: logs, as: 'log' }">
-                <!--<p class="log" 
-                   data-bind="text: log.message()"></p> iterate, database, finished-->
                 <p class="log" 
                    data-bind="visible: log.type().toLowerCase() === 'database'">
                     Excellent <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
@@ -116,28 +110,6 @@
                 }">
             </div>
             <h3 data-bind="text: 'Time left: ' + deathstar.timeLeft()"></h3>
-            <!--<h1>Spy</h1>
-            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'deploy'
-               || deathstar.stateLowerCase() === 'started'">
-                I have nothing to report, you have to get your fighters ready!</p>
-            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'shield'">
-                I have found the coordinates for the shield. It is positioned at (33, 45).</p>
-            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
-                I have found the coordinates for the shield. It is positioned at (33, 45).</p>
-            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
-                Someone has been sloppy with credentials!
-                I found out that they keep the map to the reactor in the following database: <br/>
-                Host: 140.86.34.87<br/>
-                Database name: deathstar<br/>
-                User: CaptainGodherdt<br/>
-                Password: ILoveDarth@2017<br/>
-                Table name: MissionDatabase</p>
-            <p class="spy" data-bind="visible: deathstar.stateLowerCase() === 'final'">
-            Incoming! The Empire has sent out 10 TIE Fighters! 
-            I have been able to lock down the x-coordinate but you have to use your minigun to fire between y0 and y9 coordinates!</p>-->
-            <!--<h3>Spy</h3>
-            <img id="spy" data-bind="attr: {src : '/css/images/xwing.png'},
-                 style: {width: '72px'}, click: spy.toggleVisibility"></img>-->
         </div>
     </div>
     <div id="squads" data-bind="visible: popupMessage.show() === false">
@@ -181,43 +153,7 @@
                 </div>
             </div>
         </div>
-        <!--<div class="oj-flex oj-flex-items-pad" 
-             data-bind="foreach: {data : squads, as: 'sq'}">
-            <div class="oj-lg-3 oj-sm-12 oj-flex-item">
-                <div class="squad">
-                    <div data-bind="style: {
-                        display : 'flex',
-                        'justify-content' : 'space-around'
-                    }">
-                        <h3 data-bind="text: sq.name()"></h3>
-                        <img data-bind="attr: { src: '/css/images/' + sq.statusIcon() + '.png' },
-                             style: {width: '36px', height: '36px'}"></img>
-                    </div>
-                    <ul>
-                        <li data-bind="style: {'display' : 'flex', 'align-items' : 'center'}">
-                            <strong>Weapon: </strong>
-                            <img data-bind="attr: { 
-                                src : '/css/images/' + sq.weapon() + '.png' 
-                            }, style : { 
-                                    width : '36px' ,
-                                    'margin-left' : '10px'
-                            }"></img>
-                        </li>
-                        <li data-bind="style: { display: 'flex', 'align-items': 'center'}">
-                            <strong>Fighters: </strong>
-                            <div data-bind="foreach: Array(sq.fighters())">
-                                <img data-bind="attr: {
-                                    src : '/css/images/xwing.png'
-                                }, style : { 
-                                    width : '48px', 
-                                    'margin-left': '10px' 
-                                }"></img>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>-->
+
     </div>
 </div>
 

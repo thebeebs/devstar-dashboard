@@ -7,6 +7,7 @@ const reduce = Function.bind.call(Function.call, Array.prototype.reduce);
 const isEnumerable = Function.bind.call(Function.call, Object.prototype.propertyIsEnumerable);
 const concat = Function.bind.call(Function.call, Array.prototype.concat);
 const keys = Reflect.ownKeys;
+const ds = 'http://localhost:3000';
 
 if (!Object.values) {
     Object.values = function values(O) {
@@ -17,20 +18,9 @@ if (!Object.values) {
 define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar', 
     'ojs/ojinputnumber', 'animateText'],
         function (ko, oj) {
-            
-//            if (!Object.values) {
-//                    values.shim();
-//            }
-
 
             function DashboardViewModel() {
                 const self = this;
-                
-                const searchParams = new URLSearchParams(window.location.search);
-                const useSimulator = searchParams.has('simulation');
-                const tickSpeed = searchParams.get('simulation') || 1000;
-                
-                const simulator = useSimulator ? getSimulator(tickSpeed) : null;
                 
                 // clock being used by the different components.
                 const clock = new Clock();
@@ -42,7 +32,6 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                 self.logs = ko.observableArray([]);
                 self.deathstar = new Deathstar();
                 self.spy = new Spy(0, 0, 300, 100);
-                //self.currentMessage = ko.observable(false);
                 self.popupMessage = new PopupMessage();
                 
                 // tick tock
@@ -54,12 +43,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     };
                     setInterval(self.tick, 1000);
                 };
-                /* [{"id":55,"startHealth":1000,"currentHealth":1000,"state":"STARTED",
-                 * "startTime":"2017-05-03T15:42:07.000Z","endTime":"2017-05-03T16:12:07.000Z",
-                 * "timeLimit":30,"deathStarId":59,"
-                 * gseDomains":"[{\"auth\": \"Basic Y2xvdWQuYWRtaW46Y2VudGVSQDNXSW5k\", 
-                 * \"host\": \"apaas.europe.oraclecloud.com\", \"name\": \"gse00010206\"}]",
-                 * "gameId":55,"deathstarId":59}] */
+                
                 function Deathstar() {
                     const self = this;
                     self.id = ko.observable();
@@ -73,17 +57,11 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     self.gseDomains = ko.observable();
                     self.gameId = ko.observable();
                     self.deathstarId = ko.observable();
-                    
-                    self.stateLowerCase = ko.computed( () => {
-                        return self.state() ? self.state().toLowerCase() : '';
-                    });
-                    self.currentHealthComputed = ko.computed( () => clock.clock() ? Math.floor(Math.random() * 1000) : 1000);
-                    // computed functions to calculated elapsed time since game start and time left on the clock.
-                    self.elapsedTime = ko.computed( () => timeSinceInMinutes( clock.clock(), self.startTime() ) );
+
                     self.timeLeft = ko.computed( () => timeSinceInMinutes(self.endTime(), clock.clock() ));
                 };
                 
-                function Squad(id, name, gameId, environment, username, score, hasMicroservices) {
+                function Squad(id, name, gameId, environment, username, score) {
                     const self = this;
                     self.id = ko.observable(id);
                     self.name = ko.observable(name);
@@ -94,14 +72,20 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     
                     self.microservices = ko.observableArray([]);
                     
-                    self.updateMicroservices = function() {
-                        fetch('https://ds-backend-gse00010206.apaas.em2.oraclecloud.com/squads/' +
-                                self.id() + '/microservices')
-                            .then(response => response.json())
-                            .then(data => data.forEach( ms => {
-                                if(!updateIfFound(ms, 'id', self.microservices))
+                    self.updateMicroservices = async() => {
+                        try {
+                            let response = await fetch(`${ds}/squads/${self.id()}/microservices`);
+                            let microservices = await response.json();
+                            microservices.forEach(ms => {
+                                if( self.microservices().some(m => m.id() === ms.id)) {
+                                    update( self.microservices().find( m => m.id() === ms.id ), ms);
+                                } else {
                                     self.microservices.push(new Microservice(...Object.values(ms)));
-                        }));
+                                }
+                            });
+                        } catch(err) {
+                            console.error(err);
+                        }
                     };
                 };
                 
@@ -128,12 +112,6 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     self.statusIcon = ko.computed( () => String(self.status()).toLowerCase() === 'running' ? 'power-on' : 'power-off' );
                 };
                 
-                function Highscore(name, score) {
-                    const self = this;
-                    self.name = ko.observable(name);
-                    self.score = ko.observable(score);
-                };
-                
                 function Log(id, time, gamesId, squadName, microserviceName,
                         score, damage, type) {
                     const self = this;
@@ -146,8 +124,6 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     self.damage = ko.observable(damage);
                     self.type = ko.observable(type);
                     self.message = ko.observable();
-                    
-                    generateLogMessage(self);
                 };
                 
                 function PopupMessage() {
@@ -165,26 +141,12 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                         $('#new-message h3').animate({
                             'fontSize' : '36px'
                         }, 3000, () => {
-                            //self.currentMessage(false);
                             $('#new-message h3').removeAttr('style');
                             self.show(false);
                             self.earlierMessages.push(message.text);
                         });
                     };
                 }
-                
-//                setTimeout( () => {
-//                    self.popupMessage.showMessage('Hello<br /> there!');
-//                }, 5000);
-//                
-                /*
-                bottom:344
-                height:27
-                left:1213.5
-                right:1285.5
-                top:317
-                width:72
-                 */
                 
                 function Spy(x, y, width, height) {
                     const self = this;
@@ -195,7 +157,6 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     self.visible = ko.observable(false);
                     self.toggleVisibility = () => { 
                         let spyRect = document.getElementById('spy').getBoundingClientRect();
-                        //let logsRect = document.getElementById('log-messages').getBoundingClientRect();
                         let width = 380;
                         let height = 200;
                         let x = spyRect.left - (65 + width);
@@ -236,7 +197,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                 const updateSpy = function() {
                         if(self.deathstar.currentHealth() < 0) {
                             self.popupMessage.showMessage(`Good job squads!<br/>
-                                You have defeated the Death Star!`)
+                                You have defeated the Death Star!`);
                         }
                 	switch (self.deathstar.state()) {
                 	case 'SHIELD':
@@ -266,98 +227,94 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                 	}
                 };
                 
-                const getSquads = function(isInit) {
+                const getSquads = async() => {
                     let gameId = self.deathstar.gameId();
                     if(!gameId)
                         return;
-                    let squadsPromise;
-                    if(useSimulator) {
-                        squadsPromise = simulator.getSquads();
-                    } else {
-                        squadsPromise = fetch(`https://ds-backend-gse00010206.apaas.em2.oraclecloud.com/squads?gameId=${gameId}`);
-                    }
                     
-                    squadsPromise.then(response => useSimulator ? response : response.json())
-                        .then(data => data.forEach( squad => {
+                    try {
+                        let response = await fetch(`${ds}/squads?gameId=${gameId}`);
+                        let squads = await response.json();
+                        
+                        squads.forEach( squad => {
                             squad.score = squad.score || 0;
-                            if(!updateIfFound(squad, 'id', self.squads))
-                                self.squads.push(new Squad(...Object.values(squad)));
-                        }))
-                        .then( () => self.squads().forEach( sq => sq.updateMicroservices() ))
-                        .then( () => self.highscoreSquads(
-                                self.squads().sort( (a,b) => b.score() - a.score() ))
-                        );
+                            if(self.squads().some(sq => sq.id() === squad.id)) {
+                                // There is already a squad with the same id. Just update it.                               
+                                update(self.squads().find( sq => sq.id() === squad.id), squad);
+                            } else {
+                                self.squads.push(new Squad(...Object.values(squad) ));
+                            }
+                        });
+                        
+                        self.squads().map( squad => {
+                            squad.updateMicroservices();
+                        });
+                        
+                        self.highscoreSquads( self.squads().sort( (a, b) => b.score() - a.score() ) );
+                    } catch(err) {
+                        console.error(err);
+                    }
                 };
                 
-                const getLogs = function(isInit) {
-                    let logsPromise;
-                    if(useSimulator) {
-                        logsPromise = simulator.getLogs();
-                    } else {
-                        logsPromise = fetch('https://ds-backend-gse00010206.apaas.em2.oraclecloud.com/logs');
-                    }
-                    
-                    
-                    logsPromise.then(response => useSimulator ? response : response.json())
-                        .then(data => data.sort( (a,b) => a.id - b.id ))
-                        .then(data => data.forEach( log => {
-                            if(!updateIfFound(log, 'id', self.logs)) {
+                const getLogs = async() => {
+                    try {
+                        let response = await fetch(`${ds}/logs`);
+                        let logs = await response.json();
+                        
+                        // Sort the logs.
+                        logs.sort( (a, b) => a.id - b.id );
+                        
+                        // Loop over the logs to add them to the list.
+                        logs.forEach(log => {
+                            if(!self.logs().some(l => l.id() === log.id )) {
+                                // Log was not yet added to the list. Add it in front.
                                 self.logs.unshift(new Log(...Object.values(log)));
+                                // If there is more than 5 logs we remove the last one.
                                 if(self.logs().length > 5) {
                                     self.logs.pop();
                                 }
-                                if(!isInit) {
-                                	switch (log.type.toLowerCase()) {
-                                	case 'deploy':
-                                		new Audio('/sounds/deploy.mp3').play();
-                                		break;
-                                	case 'scale':
-                                		new Audio('/sounds/fire.mp3').play();
-                                		break;
-                                	case 'shield':
-                                		new Audio('/sounds/shield.mp3').play();
-                                		break;
-                                	case 'iterate':
-                                		new Audio('/sounds/staylow.mp3').play();
-                                		break;
-                                	default:
+                                // Play a sound for the new log
+                                switch (log.type.toLowerCase()) {
+                                    case 'deploy':
+                                        new Audio('/sounds/deploy.mp3').play();
+                                        break;
+                                    case 'scale':
+                                        new Audio('/sounds/fire.mp3').play();
+                                        break;
+                                    case 'shield':
+                                        new Audio('/sounds/shield.mp3').play();
+                                        break;
+                                    case 'iterate':
+                                        new Audio('/sounds/staylow.mp3').play();
+                                        break;
+                                    default:
                                         new Audio('/sounds/laserBlast.mp3').play();
-                                		break;
-                                	}
+                                        break;
                                 }
+                            } else {
+                                // Log was already inside. 
+                                // We call update, but updates of logs should never happen.
+                                update(self.logs().find( l => l.id() === log.id ), log);
                             }
-                    }));
-                };
-                
-                const getDeathstar = function(isInit) {
-                    let deathstarPromise;
-                    if(useSimulator) {
-                        deathstarPromise = simulator.getDeathstar();
-                    } else {
-                        deathstarPromise = fetch('https://ds-backend-gse00010206.apaas.em2.oraclecloud.com/deathstar/latest');
+                        });
+                    } catch(err) {
+                        console.log(`Error: ${JSON.stringify(err)}`);
                     }
                     
-                    deathstarPromise.then(response => useSimulator ? response : response.json())
-                        .then(data => update(self.deathstar, data) )
-                        .then(() => {
-                        	getSquads();
-                        	updateSpy();
-                        })
                 };
                 
-//                self.getSpyMessages = function() {
-//                    let spyPosition = document.getElementById('spy').getBoundingClientRect();
-//                    
-//                };
-                
-                /* SPY: SHIELD, FINAL */
-                /*const getSpy = function() {
-                    let spyPromise = fetch('https://ds-backend-gse00010206.apaas.em2.oraclecloud.com/spy');
-                    
-                    spyPromise.then(response => response.json())
-                        .then(data => update(self.spy, data) );
-                    //spyPromise.then( response => )
-                };*/
+                const getDeathstar = async() => {
+                    try {
+                        let response = await fetch(`${ds}/deathstar/latest`);
+                        let deathstar = await response.json();
+
+                        update(self.deathstar, deathstar);
+                        getSquads();
+                        updateSpy();
+                    } catch(err) {
+                        console.log(`Error: ${JSON.stringify(err)}`);
+                    }
+                };
                 
                 // intervals to update the components.
                 const updateComponents = function(isInit) {
@@ -373,10 +330,6 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
 
 });     
 
-// functions to help updating components.
-const findElementInArray = (p, iden, arr) => {
-    return arr().find(obj => obj[p]() === iden);
-};
 const update = (o, props) => { 
     Object.keys(props).forEach( key =>  { 
         if(typeof o[key] !== 'function')
@@ -385,15 +338,6 @@ const update = (o, props) => {
                     changes to ${JSON.stringify(o)}`);
         o[key](props[key]);
     });
-};
-
-function updateIfFound(props, identifier, array) {
-    let element = findElementInArray(identifier, props[identifier], array);
-    if(!element) 
-        return false;
-        
-    update(element, props); 
-    return true;
 };
 
 // time and date functions.
@@ -445,53 +389,34 @@ function formatDate(dateString) {
     return date.toLocaleDateString('en-GB', options);
 };
 
-//function incomingMessage() {
-//    $('#new-message h3').animate({fontSize: '48px'}, 1000);
-//};
-
-function generateLogMessage(log) {
-    if(log.type().toLowerCase() === 'deploy') {
-        log.message(`Good job ${log.squadName()}! ${log.microserviceName()}
-            was deployed and has inflicted ${log.damage()} to the deathstar!`);
-    } else if(log.type().toLowerCase() === 'scale') {
-        log.message(`Good job ${log.squadName()}! ${log.microserviceName()}
-            has scaled up and is now using multiple fighters to fight the death star!`);
-    } else if(log.type().toLowerCase() === 'start') {
-        log.message(`Good luck to all squads! The game has started!`);
-    }else {
-        log.message(`${log.microserviceName()}
-            has done something and this dashboard has no idea what!`);
-    }
-}
-
 const deployMissionMessage = {
-    name : `<strong>Deploying your X-Wing fighter!</strong>`,
-    message : `The <strong>Death Star</strong> has to be destroyed.
-            To start attacking the Death Star your X-Wing will have to be up and running!
-            It's time to deploy our attack!`
+    name: `<strong>Deploying your X-Wing fighter!</strong>`,
+    message: `The <strong>Death Star</strong> has to be destroyed.
+        To start attacking the Death Star your X-Wing will have to be up and running!
+        It's time to deploy our attack!`
 };
 
 const scaleMissionMessage = {
-    name : `<strong>Scaling our attacks!</strong>`,
-    message : `Great start! It's time we scale up our attacks!
-               We should get another instance of our X-Wing up and running to increase the damage we deal!`
+    name: `<strong>Scaling our attacks!</strong>`,
+    message: `Great start! It's time we scale up our attacks!
+        We should get another instance of our X-Wing up and running to increase the damage we deal!`
 };
 
 const shieldMissionMessage = {
-    name : `<strong>Take down their defenses!</strong>`,
-    message : `Great job squads! <br />
-            The Death Star is defended by a shield which we must bring down.
-            The coordinates of the shield are <stron>(33,45)</strong>. Expose the Death Star!`
+    name: `<strong>Take down their defenses!</strong>`,
+    message: `Great job squads! <br />
+        The Death Star is defended by a shield which we must bring down.
+        The coordinates of the shield are <strong>(33,45)</strong>. Expose the Death Star!`
 };
 
 const iterateMissionMessage = {
-    message : `<strong>Incoming! The Empire has sent out 10 TIE Fighters! </strong><br />
-            I have been able to lock down the x-coordinate 
-            but you have to use your minigun to fire between <strong>y0</strong> and <strong>y9</strong> coordinates!`,
-    name : `<strong>The empire strikes back!</strong>`
+    message: `<strong>Incoming! The Empire has sent out 10 TIE Fighters! </strong><br />
+        I have been able to lock down the x-coordinate 
+        but you have to use your minigun to fire between <strong>y0</strong> and <strong>y9</strong> coordinates!`,
+    name: `<strong>The empire strikes back!</strong>`
 };
 
-const databaseMissionMessage = { 
+const databaseMissionMessage = {
     message: `Someone has been sloppy with credentials!
         I found out that they keep the map to the reactor in the following database: <br/><br />
         <strong>Host:</strong> 140.86.34.87<br/>
@@ -502,18 +427,18 @@ const databaseMissionMessage = {
     name: `<strong>Captain Godherdt's mistake..</strong>`
 };
 
-const hardMissionMessage = { 
-	message : `<strong>I have found the encrypted password! </strong><br />
-            Decrypt the password to be able to hack and destroy the Fuel Tank! The encrypted password is: </br> <strong>14 78 SPACE 14 70 cd SPACE 65 c9 08 65 dc 12 SPACE d6 02 77 da 05 72 c9 0f 6d dc 19 77 dc SPACE 78 d6 0c 77 d1 SPACE 7b d0 09 SPACE d3 SPACE SPACE cb 14 73 de 0d 6a SPACE 10 65 c9 08 76 c9 10 79 cb 01 79 dc 05 68 cc 0f 69 d7 0e 78 cd SPACE SPACE cd 12 70 d6 05 6c cc 10 68 da</strong> `, 
-    name : `<strong>Hack the Fuel Tank!</strong>`
-	};
+const hardMissionMessage = {
+    message: `<strong>I have found the encrypted password! </strong><br />
+        Decrypt the password to be able to hack and destroy the Fuel Tank! The encrypted password is: </br> <strong>14 78 SPACE 14 70 cd SPACE 65 c9 08 65 dc 12 SPACE d6 02 77 da 05 72 c9 0f 6d dc 19 77 dc SPACE 78 d6 0c 77 d1 SPACE 7b d0 09 SPACE d3 SPACE SPACE cb 14 73 de 0d 6a SPACE 10 65 c9 08 76 c9 10 79 cb 01 79 dc 05 68 cc 0f 69 d7 0e 78 cd SPACE SPACE cd 12 70 d6 05 6c cc 10 68 da</strong> `,
+    name: `<strong>Hack the Fuel Tank!</strong>`
+};
 
 const falconMissionMessage = {
-	    message : `<strong>Well done! Let's finish it off! </strong><br />
-	            The Death Star has been really weakened, if you focus all your X-wing fighter's energy,
-	            we should be able to call the Millenium Falcon to finish off the Death Star! <br/><br />
-	            If you <strong> increase the memory of your fighters to 2GB each </strong>, you should get enough power
-	            to send a signal to the Millenium Falcon! `, 
-	    name : `<strong>Millenium Falcon to the rescue!</strong>`
-	};
+    message: `<strong>Well done! Let's finish it off! </strong><br />
+	The Death Star has been really weakened, if you focus all your X-wing fighter's energy,
+	we should be able to call the Millenium Falcon to finish off the Death Star! <br/><br />
+	If you <strong> increase the memory of your fighters to 2GB each </strong>, you should get enough power
+	to send a signal to the Millenium Falcon! `,
+    name: `<strong>Millenium Falcon to the rescue!</strong>`
+};
 
