@@ -4,8 +4,19 @@ var path = require('path');
 var app = express();
 var http = require('http').Server(app);
 
+console.log(JSON.stringify(process.env.OCCS_HOSTIPS));
+const backendBaseUrl = `${JSON.stringify(process.env.OCCS_HOSTIPS)}`.split('public_ip: ')[1].split('"')[0];
+
 http.listen(process.env.PORT || 8089, function(){
   console.log('listening on ' + process.env.PORT || 8089);
+});
+
+app.get('/backend-info', (req, res, next) => {
+    res.send({'info' : JSON.stringify(process.env.OCCS_HOSTIPS)});
+});
+
+app.get('/backend', (req, res, next) => {
+    res.send({ 'backendBaseUrl' : backendBaseUrl } );
 });
 
 // view engine setup
@@ -22,6 +33,8 @@ app.use(function(req, res, next) {
   err.status = 404;
   next(err);
 });
+
+
 
 
 
