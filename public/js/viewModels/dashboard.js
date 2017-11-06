@@ -211,6 +211,15 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                                 You have defeated the Alien War Ship!`);
               }
               switch (self.deathstar.state()) {
+                case 'STARTED':
+                  var messages = [deployMissionMessage, scaleMissionMessage, shieldMissionMessage, iterateMissionMessage];
+                  self.spy.messages(messages);
+                  break;
+                case 'STARTED_DATABASE':
+                  var messages = [deployMissionMessage, scaleMissionMessage, shieldMissionMessage, iterateMissionMessage, databaseMissionMessage];
+                  self.spy.messages(messages);
+                  break;
+                /*
                 case 'SHIELD':
                   var shieldMessages = [deployMissionMessage, scaleMissionMessage, shieldMissionMessage];
                   self.spy.messages(shieldMessages);
@@ -225,6 +234,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                     iterateMissionMessage, databaseMissionMessage, hardMissionMessage];
                   self.spy.messages(hardMessages);
                   break;
+                  */
                 case 'FALCON':
                   var falconMessages = [falconMissionMessage];
                   self.spy.messages(falconMessages);
