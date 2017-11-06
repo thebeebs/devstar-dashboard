@@ -208,7 +208,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
             const updateSpy = function () {
               if (self.deathstar.currentHealth() < 0) {
                 self.popupMessage.showMessage(`Good job squads!<br/>
-                                You have defeated the Death Star!`);
+                                You have defeated the Alien War Ship!`);
               }
               switch (self.deathstar.state()) {
                 case 'SHIELD':
@@ -230,8 +230,8 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                   self.spy.messages(falconMessages);
                   break;
                 case 'FALCONCALLED':
-                  self.popupMessage.showMessage(`The Millenium Falcon has been called!<br />
-                                    It completely destroyed the weakened Death Star! Well done!`);
+                  self.popupMessage.showMessage(`The Redwood Eagle has been called!<br />
+                                    It completely destroyed the weakened Alien War Ship! Well done!`);
                   break;
                 default:
                   break;
@@ -250,7 +250,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                 squads.forEach(squad => {
                   squad.score = squad.score || 0;
                   if (self.squads().some(sq => sq.id() === squad.id)) {
-                    // There is already a squad with the same id. Just update it.                               
+                    // There is already a squad with the same id. Just update it.
                     update(self.squads().find(sq => sq.id() === squad.id), squad);
                   } else {
                     self.squads.push(new Squad(...Object.values(squad)));
@@ -303,7 +303,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                         break;
                     }
                   } else {
-                    // Log was already inside. 
+                    // Log was already inside.
                     // We call update, but updates of logs should never happen.
                     update(self.logs().find(l => l.id() === log.id), log);
                   }
@@ -401,41 +401,41 @@ function formatDate(dateString) {
 };
 
 const deployMissionMessage = {
-  name: `<strong>Deploying your X-Wing fighter!</strong>`,
-  message: `The <strong>Death Star</strong> has to be destroyed.
-        To start attacking the Death Star your X-Wing will have to be up and running!
+  name: `<strong>Deploying your space fighter!</strong>`,
+  message: `The <strong>Alien War Ship</strong> has to be destroyed.
+        To start attacking the Alien War Ship your space fighters will have to be up and running!
         It's time to deploy our attack!`
 };
 
 const scaleMissionMessage = {
   name: `<strong>Scaling our attacks!</strong>`,
   message: `Great start! It's time we scale up our attacks!
-        We should get another instance of our X-Wing up and running to increase the damage we deal!`
+        We should get another instance of our space fighter up and running to increase the damage we deal!`
 };
 
 const shieldMissionMessage = {
   name: `<strong>Take down their defenses!</strong>`,
   message: `Great job squads! <br />
-        The Death Star is defended by a shield which we must bring down.
-        The coordinates of the shield are <strong>(33,45)</strong>. Expose the Death Star!`
+        The Alien War Ship is defended by a shield which we must bring down.
+        The coordinates of the shield are <strong>(33,45)</strong>. Expose the Alien War Ship!`
 };
 
 const iterateMissionMessage = {
-  message: `<strong>Incoming! The Empire has sent out 10 TIE Fighters! </strong><br />
-        I have been able to lock down the x-coordinate 
+  message: `<strong>Incoming! The Alien War Ship has sent out 10 Mini Fighters! </strong><br />
+        I have been able to lock down the x-coordinate
         but you have to use your minigun to fire between <strong>y0</strong> and <strong>y9</strong> coordinates!`,
-  name: `<strong>The empire strikes back!</strong>`
+  name: `<strong>The Aliens strike back!</strong>`
 };
 
 const databaseMissionMessage = {
   message: `Someone has been sloppy with credentials!
         I found out that they keep the map to the reactor in the following database: <br/><br />
-        <strong>Host:</strong> 140.86.34.87<br/>
+        <strong>Host IP:</strong> Check the instructions!<br/>
         <strong>Database name:</strong> deathstar<br/>
-        <strong>User:</strong> CaptainGodherdt<br/>
-        <strong>Password:</strong> ILoveDarth@2017<br/>
-        <strong>Table name:</strong> MissionDatabase</p>`,
-  name: `<strong>Captain Godherdt's mistake..</strong>`
+        <strong>User:</strong> Captain<br/>
+        <strong>Password:</strong> welcome1<br/>
+        <strong>Table name:</strong> SecretTable</p>`,
+  name: `<strong>Captain's mistake..</strong>`
 };
 
 const hardMissionMessage = {
@@ -446,10 +446,9 @@ const hardMissionMessage = {
 
 const falconMissionMessage = {
   message: `<strong>Well done! Let's finish it off! </strong><br />
-	The Death Star has been really weakened, if you focus all your X-wing fighter's energy,
-	we should be able to call the Millenium Falcon to finish off the Death Star! <br/><br />
+	The Alien War Ship has been really weakened, if you focus all your space fighter's energy,
+	we should be able to call the Redwood Eagle to finish off the Alien War Ship! <br/><br />
 	If you <strong> increase the memory of your fighters to 2GB each </strong>, you should get enough power
-	to send a signal to the Millenium Falcon! `,
-  name: `<strong>Millenium Falcon to the rescue!</strong>`
+	to send a signal to the Redwood Eagle! `,
+  name: `<strong>Redwood Eagle to the rescue!</strong>`
 };
-

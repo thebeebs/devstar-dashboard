@@ -16,14 +16,14 @@
             </div>
         </div>
         <div id="deathstar" class="oj-lg-3 oj-md-6 oj-sm-12 oj-flex-item">
-            <h1>Death Star status</h1>
+            <h1>Alien War Ship status</h1>
             <h3 data-bind="text: 'id: ' + deathstar.id()"></h3>
             <h3 data-bind="text: 'Current Health: ' + deathstar.currentHealth()"></h3>
         </div>
     </div>
     <div id="squads">
         <h1>Squads</h1>
-        <div class="oj-flex oj-flex-items-pad" 
+        <div class="oj-flex oj-flex-items-pad"
             data-bind="foreach: {data : squads, as: 'sq'}">
                <div class="oj-lg-3 oj-sm-12 oj-flex-item">
                    <div class="squad">
@@ -51,15 +51,15 @@
            </div>
        </div>
     </div>
-    
+
     <div id="logs">
         <h1>Latest Actions</h1>
         <div data-bind="foreach: {data: logs, as: 'log' }">
-            <p class="log" 
-               data-bind="text: '[' + log.formattedDate() + '] : ' + log.squadName() + 
+            <p class="log"
+               data-bind="text: '[' + log.formattedDate() + '] : ' + log.squadName() +
                ' - ' + log.text()"></p>
         </div>
     </div>
-    
-    
+
+
 </script>

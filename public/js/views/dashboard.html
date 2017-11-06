@@ -6,7 +6,7 @@
     <div id="templateList" data-bind="template: 'dashboardContent'"></div>
 </div>
 <script type="text/html" id="dashboardContent">
-    
+
     <div class="spy-message" data-bind="visible: spy.visible(),
          style: {
              left: spy.x(),
@@ -14,77 +14,77 @@
              width: spy.width(),
              height: spy.height()
          }">
-        
+
         <div class="triangle-border right">
             <div class="spy-message-nav">
                 <a data-bind="click: spy.previous, css: { enabled: spy.hasPrevious }">Previous</a>
                 <span data-bind="html: spy.messages()[spy.selectedMessage()].name"></span>
-                <a data-bind="click: spy.next, css: { enabled: spy.hasNext }">Next</a> 
+                <a data-bind="click: spy.next, css: { enabled: spy.hasNext }">Next</a>
             </div>
             <p data-bind="html: spy.messages()[spy.selectedMessage()].message"></p>
         </div>
     </div>
-    
+
     <div id="spy-block" data-bind="click: spy.toggleVisibility">
         <h3>Spy</h3>
-        <img id="spy" data-bind="attr: {src : '/css/images/spyGalenErso.png'},
+        <img id="spy" data-bind="attr: {src : '/css/images/devstar_spy.png'},
             style: {width: '100px'}"></img>
     </div>
-    
+
     <div class="dashboard-flex-layout" data-bind="visible: popupMessage.show() == false">
         <div id="logs">
             <h1>Latest Actions</h1>
             <div id="log-messages" data-bind="foreach: {data: logs, as: 'log' }">
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'database'">
                     Excellent <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has found and hit the reactor core and inflicted 
-                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has found and hit the reactor core and inflicted
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'iterate'">
                     Fantastic defense <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has shot down 10 TIE fighters and inflicted 
-                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has shot down 10 Mini fighters and inflicted
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'shield'">
                     Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has fired at the shield and inflicted 
-                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has fired at the shield and inflicted
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'deploy'">
                     Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has been deployed and inflicted 
-                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has been deployed and inflicted
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'scale'">
                     Good job <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has scaled up to two fighters and dealt 
-                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has scaled up to two fighters and dealt
+                    <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'hard'">
                     Fueld Tank hacked! <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
-                    has hacked and destroyed the Fuel Tank, causing <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Death Star!
+                    has hacked and destroyed the Fuel Tank, causing <span class="log-dmg" data-bind="text: log.damage()"></span> damage to the Alien War Ship!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'falcon'">
                     Energy level increased! <span class="log-sq" data-bind="text: log.squadName() + ' squad', style: {color: log.squadName()}"></span>!
                     <span class="log-ms" data-bind="text: log.microserviceName()"></span>
                     has increased the memory of their fighter!
                 </p>
-                <p class="log" 
+                <p class="log"
                    data-bind="visible: log.type().toLowerCase() === 'start'">
-                    The game has started! Good luck to all Squads on bringing down the Death Star!
+                    The game has started! Good luck to all Squads on bringing down the Alien War Ship!
                 </p>
             </div>
         </div>
@@ -100,11 +100,11 @@
             </div>
         </div>
         <div id="deathstar">
-            <h1>Death Star</h1>
+            <h1>Alien War Ship</h1>
             <h3 data-bind="text: 'Current Health:'"></h3>
             <div id="progressbar"
                  data-bind="ojComponent: {
-                      component: 'ojProgressbar', 
+                      component: 'ojProgressbar',
                       value: deathstar.currentHealth(),
                       max: deathstar.startHealth()
                 }">
@@ -130,9 +130,9 @@
                         <ul>
                             <li data-bind="style: {'display' : 'flex', 'align-items' : 'center'}">
                                 <strong>Weapon: </strong>
-                                <img data-bind="attr: { 
-                                    src : '/css/images/' + ms.platformimg() + '.png' 
-                                }, style : { 
+                                <img data-bind="attr: {
+                                    src : '/css/images/' + ms.platformimg() + '.png'
+                                }, style : {
                                         width : '36px' ,
                                         'margin-left' : '10px'
                                 }"></img>
@@ -142,9 +142,9 @@
                                 <div data-bind="foreach: Array(ms.instances())">
                                     <img data-bind="attr: {
                                         src : '/css/images/xwing.png'
-                                    }, style : { 
-                                        width : '48px', 
-                                        'margin-left': '10px' 
+                                    }, style : {
+                                        width : '48px',
+                                        'margin-left': '10px'
                                     }"></img>
                                 </div>
                             </li>
