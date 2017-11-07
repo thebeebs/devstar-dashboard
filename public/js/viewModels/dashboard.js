@@ -81,7 +81,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
 
               self.updateMicroservices = async() => {
                 try {
-                  let response = await fetch(`${ds}/squads/${self.id()}/microservices`);
+                  let response = await fetch(`${ds.baseUrl}/squads/${self.id()}/microservices`);
                   let microservices = await response.json();
                   microservices.forEach(ms => {
                     if (self.microservices().some(m => m.id() === ms.id)) {
