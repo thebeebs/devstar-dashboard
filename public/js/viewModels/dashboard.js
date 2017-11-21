@@ -117,7 +117,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
               self.score = ko.observable(score || 0);
 
               self.platformimg = ko.computed(() => self.platform().toLowerCase());
-              self.statusIcon = ko.computed(() => String(self.status()).toLowerCase() === 'running' ? 'power-on' : 'power-off');
+              self.statusIcon = ko.computed(() => 'power-on');
             }
             ;
 
