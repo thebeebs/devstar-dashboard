@@ -121,31 +121,29 @@
                 <h2 data-bind="text: squad.name(), style: { 'text-align' : 'center' , color: squad.name()}"></h2>
                 <div data-bind="foreach: { data: squad.microservices, as : 'ms' }">
                     <div class="squad">
-                        <div data-bind="style: {
-                            display: 'flex',
-                            'justify-content' : 'space-around'
-                        }">
-                            <h3 data-bind="text: ms.name().toLowerCase()"></h3>
-                            <img data-bind="attr: { src: '/css/images/' + ms.statusIcon() + '.png' },
-                                style: {width: '36px', height: '36px'}"></img>
-                        </div>
                         <ul>
                             <li data-bind="style: {'display' : 'flex', 'align-items' : 'center'}">
-                                <strong>Weapon: </strong>
-                                <img data-bind="attr: {
-                                    src : '/css/images/' + ms.platformimg() + '.png'
-                                }, style : {
-                                        width : '36px' ,
-                                        'margin-left' : '10px'
-                                }"></img>
+                                <strong>Name: </strong>
+                                <h3 class="squad-labels" data-bind="text: ms.name()"></h3>
+                                <strong>Version: </strong>
+                                <h3 class="squad-labels" data-bind="text: ms.version() + ' (<' + ms.modified() + 'm)'"></h3>
                             </li>
                             <li data-bind="style: { display: 'flex', 'align-items': 'center'}">
+                              <strong>Weapon: </strong>
+                              <img data-bind="attr: {
+                                  src : '/css/images/' + ms.platformimg() + '.png'
+                              }, style : {
+                                      width : '36px' ,
+                                      'margin-right' : '10px',
+                                      'margin-left' : '10px'
+                              }"></img>
                                 <strong>Fighters: </strong>
                                 <div data-bind="foreach: Array(ms.instances())">
                                     <img data-bind="attr: {
                                         src : '/css/images/xwing.png'
                                     }, style : {
                                         width : '48px',
+                                        'margin-right' : '10px',
                                         'margin-left': '10px'
                                     }"></img>
                                 </div>

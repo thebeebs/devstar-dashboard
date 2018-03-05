@@ -85,6 +85,10 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                   let microservices = await response.json();
                   microservices.forEach(ms => {
                     if (self.microservices().some(m => m.id() === ms.id)) {
+                      var date = new Date(ms.modified);
+                      var current = new Date();
+                      var minutesSinceUpdate = Math.ceil(((current - date)/60000));
+                      ms.modified = minutesSinceUpdate;
                       update(self.microservices().find(m => m.id() === ms.id), ms);
                     } else {
                       self.microservices.push(new Microservice(...Object.values(ms)));
@@ -99,7 +103,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
 
             function Microservice(squadId, microserviceId, id, name,
                     gameId, environment, created, modified, platform,
-                    instances, status, userName, memory, score) {
+                    instances, status, userName, memory, version, score) {
               const self = this;
               self.squadId = ko.observable(squadId);
               self.microserviceId = ko.observable(microserviceId);
@@ -108,16 +112,18 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
               self.gameId = ko.observable(gameId);
               self.environment = ko.observable(environment);
               self.created = ko.observable(created);
-              self.modified = ko.observable(modified);
+              var date = new Date(modified);
+              var current = new Date();
+              var minutesSinceUpdate = Math.ceil(((current - date)/60000));
+              self.modified = ko.observable(minutesSinceUpdate);
               self.platform = ko.observable(platform);
               self.instances = ko.observable(instances);
               self.status = ko.observable(status);
               self.userName = ko.observable(userName);
               self.memory = ko.observable(memory);
               self.score = ko.observable(score || 0);
-
+              self.version = ko.observable(version);
               self.platformimg = ko.computed(() => self.platform().toLowerCase());
-              self.statusIcon = ko.computed(() => 'power-on');
             }
             ;
 
@@ -144,17 +150,18 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
 
               self.showMessage = message => {
                 if (self.earlierMessages.some(m => m === message.text))
-                  return;
+                  return false;
                 self.show(true);
-                $('#new-message h3').html(message.text);
+                $('#new-message h3').html(message);
 
                 $('#new-message h3').animate({
                   'fontSize': '36px'
-                }, 3000, () => {
+                }, 10000, () => {
                   $('#new-message h3').removeAttr('style');
                   self.show(false);
                   self.earlierMessages.push(message.text);
                 });
+                return true;
               };
             }
 
@@ -206,9 +213,11 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
             ;
 
             const updateSpy = function () {
-              if (self.deathstar.currentHealth() < 0) {
-                self.popupMessage.showMessage(`Good job squads!<br/>
-                                You have defeated the Alien War Ship!`);
+              if (self.deathstar.currentHealth() < 1) {
+                if (self.popupMessage.showMessage(`Good job squads!<br/>
+                                You have defeated the Alien War Ship!`)) {
+                  new Audio('/sounds/explosion.mp3').play();
+                }
               }
               switch (self.deathstar.state()) {
                 case 'STARTED':
@@ -290,10 +299,7 @@ define(['knockout', 'ojs/ojcore', 'ojs/ojknockout', 'ojs/ojprogressbar',
                   if (!self.logs().some(l => l.id() === log.id)) {
                     // Log was not yet added to the list. Add it in front.
                     self.logs.unshift(new Log(...Object.values(log)));
-                    // If there is more than 5 logs we remove the last one.
-                    if (self.logs().length > 5) {
-                      self.logs.pop();
-                    }
+
                     // Play a sound for the new log
                     switch (log.type.toLowerCase()) {
                       case 'deploy':
